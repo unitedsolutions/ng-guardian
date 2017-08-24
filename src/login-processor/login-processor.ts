@@ -6,9 +6,9 @@ export default function(credentials) {
   this.http.post(this.configs.loginRoute, credentials).subscribe(data => {
     let fields = ['routes', 'token'];
     let {routes, token} = _.pick(data, fields);
+    this.http.setToken(token);
     data = _.omit(data, fields);
     _.extend(this, {data});
-    this.http.setToken(token);
     roleSetter.call(this, 'auth', true, routes);
     autoLogoutSetter('add');
   });

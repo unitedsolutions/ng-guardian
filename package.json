@@ -25,7 +25,7 @@
     "routing"
   ],
   "dependencies": {
-    "ng-http-plus": "git+ssh://git@github.com:unitedsolutions/ng-http-plus.git"
+    "ng-http-client-plus": "git+ssh://git@github.com:unitedsolutions/ng-http-client-plus.git"
   },
   "peerDependencies": {
     "@angular/core": ">=4.0.0",

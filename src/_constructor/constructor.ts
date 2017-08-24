@@ -1,4 +1,4 @@
-import {HttpClientPlus}  from 'ng-http-plus';
+import {HttpClientPlus}  from 'ng-http-client-plus';
 import {Router}          from '@angular/router';
 import {Injectable}      from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
