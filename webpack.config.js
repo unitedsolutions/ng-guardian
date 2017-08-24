@@ -30,11 +30,11 @@ module.exports = {
       commonjs2: 'rxjs',
       amd: 'rxjs'
     },
-    'ng-http-plus': {
-      root: 'ngHttpPlus',
-      commonjs: 'ng-http-plus',
-      commonjs2: 'ng-http-plus',
-      amd: 'ng-http-plus'
+    'ng-http-client-plus': {
+      root: 'ngHttpClientPlus',
+      commonjs: 'ng-http-client-plus',
+      commonjs2: 'ng-http-client-plus',
+      amd: 'ng-http-client-plus'
     },
     '@angular/core': {
       root: ['ng', 'core'], 
