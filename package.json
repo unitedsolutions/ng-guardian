@@ -29,7 +29,7 @@
   ],
   "dependencies": {
     "lodash": "^4.17.4",
-    "ng-http-client-plus": "file:../ng-http-client-plus"
+    "ng-http-client-plus": "git+ssh://git@github.com:unitedsolutions/ng-http-client-plus.git"
   },
   "peerDependencies": {
     "@angular/core": ">=4.3.6",
