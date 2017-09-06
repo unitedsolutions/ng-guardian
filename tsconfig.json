@@ -1,14 +1,29 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "es2015",
-    "sourceMap": true,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
+    "baseUrl": ".",
+    "declaration": true,
+    "stripInternal": true,
     "experimentalDecorators": true,
-    "declaration": false,
+    "strictNullChecks": false,
+    "noImplicitAny": false,
+    "module": "es2015",
+    "moduleResolution": "node",
     "outDir": "./dist",
-    "lib": ["es2015", "dom"]
+    "sourceMap": true,
+    "inlineSources": true,
+    "target": "es5",
+    "skipLibCheck": true,
+    "lib": [
+      "es2015", 
+      "dom"
+    ]
   },
-  "files": ["./src/ng-guardian"]
+  "files": [
+    "./src/ng-guardian.ts"
+  ],
+  "angularCompilerOptions": {
+    "strictMetadataEmit": true,
+    "skipTemplateCodegen": true,
+    "genDir": "dist"
+  }
 }

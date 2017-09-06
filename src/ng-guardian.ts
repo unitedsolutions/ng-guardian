@@ -6,14 +6,14 @@ import init                   from './initializer/initializer';
 import login                  from './login-processor/login-processor';
 import logout                 from './logout-processor/logout-processor';
 import links                  from './links-getter/links-getter';
-import role                   from './role-getter/role-getter';
+import routes                 from './routes-getter/routes-getter';
 
 _.extend(Guardian.prototype, {
   init,
   login,
   logout,
   links,
-  role
+  routes
 });
 
 @NgModule({

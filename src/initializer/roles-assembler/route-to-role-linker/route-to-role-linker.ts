@@ -1,5 +1,6 @@
 import * as _          from 'lodash';
 import {roles}         from '../../../_lib/vars';
+import childrenGetter  from './_lib/children-getter';
 import routeGetter     from './_lib/route-getter';
 import routeSterilizer from './_lib/route-sterilizer';
 
@@ -9,12 +10,12 @@ export default function routeToRoleLinker(route, mainRoute?, parentRoute?, paths
   let {children} = route;
   let childlessRoute = _.omit(route, ['children']);
 
-  if(_default) {
-    roles[routeRoleName]._default = [''].concat(paths, path).join('/');
+  if(!routeRoleName) {
+    routeRoleName = parentRoleName || 'all';
   }
 
-  if(!routeRoleName && !parentRoleName) {
-    routeRoleName = 'all';
+  if(_default) {
+    roles[routeRoleName]._default = [''].concat(paths, path).join('/');
   }
 
   if(!parentRoleName) {
@@ -23,15 +24,23 @@ export default function routeToRoleLinker(route, mainRoute?, parentRoute?, paths
     if(routeRoleName !== parentRoleName) {
       let rootRoleName = paths.shift();
       let {routes} = roles[routeRoleName];
-      let roleRoute = _.filter(routes, {path: rootRoleName})[0];
+      let [roleRoute] = _.filter(routes, {path: rootRoleName});
 
       if(!roleRoute) {
         roleRoute = routeSterilizer(mainRoute, routeRoleName);
         routes.push(roleRoute);
       }
 
-      roleRoute = routeGetter(paths, roleRoute, mainRoute, routeRoleName);
+      roleRoute = routeGetter(paths.slice(), roleRoute, mainRoute, routeRoleName);
       roleRoute.children.push(childlessRoute);
+      
+      let children = childrenGetter(paths, mainRoute.children);
+      let [emptyMainRoute] = _.filter(children, {path: ''});
+      let [emptyRoleRoute] = _.filter(roleRoute.children, {path: ''});
+      
+      if(emptyMainRoute && !emptyRoleRoute) {
+        roleRoute.children.unshift({path: '', redirectTo: path, pathMatch: 'full'});
+      }
     } else {
       let {children = []} = parentRoute;
       

@@ -3,7 +3,7 @@ import autoLogoutSetter from '../auto-logout-setter/auto-logout-setter';
 import roleSetter       from '../role-setter/role-setter';
 
 export default function(credentials) {
-  this.http.post(this.configs.loginRoute, credentials).subscribe(data => {
+  this.http.post(this.configs.loginUrl, credentials).subscribe(data => {
     let fields = ['routes', 'token'];
     let {routes, token} = _.pick(data, fields);
     this.http.setToken(token);

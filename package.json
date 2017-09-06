@@ -2,11 +2,14 @@
   "name": "ng-guardian",
   "version": "0.5.0",
   "description": "Authentication and authorization framework for angular applications",
-  "main": "dist/ng-guardian.umd",
-  "typings": "dist/typings/ng-guardian.d",
-  "module": "src/ng-guardian",
+  "main": "./dist/ng-guardian.umd",
+  "typings": "./dist/ng-guardian.d",
+  "module": "./dist/ng-guardian.js",
   "scripts": {
-    "build": "webpack",
+    "build": "npm run clean && npm run ngc && npm run bundle",
+    "ngc": "ngc",
+    "bundle": "rollup -c",
+    "clean": "rimraf ./dist",
     "test": "npm run build && karma start"
   },
   "repository": {
@@ -26,9 +29,11 @@
   ],
   "dependencies": {
     "lodash": "^4.17.4",
-    "ng-http-client-plus": "git+ssh://git@github.com:unitedsolutions/ng-http-client-plus.git",
-    "@angular/core": ">=4.0.0",
-    "@angular/router": ">=4.2.0"
+    "ng-http-client-plus": "file:../ng-http-client-plus"
+  },
+  "peerDependencies": {
+    "@angular/core": ">=4.3.6",
+    "@angular/router": ">=4.3.6"
   },
   "devDependencies": {
     "@angular/animations": "^4.2.0",
@@ -65,6 +70,7 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^2.0.1",
     "phantomjs-prebuilt": "^2.1.7",
+    "rimraf": "^2.6.1",
     "systemjs": "0.19.39",
     "ts-helpers": "^1.1.2",
     "typescript": "^2.3.2",

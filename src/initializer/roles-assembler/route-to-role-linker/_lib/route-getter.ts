@@ -3,7 +3,7 @@ import routeSterilizer from './route-sterilizer';
 
 export default function routeGetter(paths, roleRoute, mainRoute, roleName) {
   let path = paths.shift();
-  
+
   if(!path) {
     return roleRoute;
   }
