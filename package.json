@@ -29,7 +29,7 @@
   ],
   "dependencies": {
     "lodash": "^4.17.4",
-    "ng-http-client-plus": "git+ssh://git@github.com:unitedsolutions/ng-http-client-plus.git"
+    "ng-http-client-plus": "git+ssh://git@github.com/unitedsolutions/ng-http-client-plus.git#f77b6b93b3ef2ebb3f7d52ee4ca14d9e8713b091"
   },
   "peerDependencies": {
     "@angular/core": ">=4.3.6",
@@ -45,6 +45,8 @@
     "@angular/platform-browser": "^4.2.0",
     "@angular/platform-browser-dynamic": "^4.2.0",
     "@angular/platform-server": "^4.2.0",
+    "@angular/core": "^4.3.6",
+    "@angular/router": "^4.3.6",
     "@angular/tsc-wrapped": "^4.2.0",
     "@types/angular": "^1.5.16",
     "@types/angular-animate": "^1.5.5",
