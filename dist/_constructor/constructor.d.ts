@@ -12,6 +12,7 @@ export declare class Guardian {
     configs: any;
     defaultUrl: any;
     redirectUrl: any;
+    history: any[];
     linksPublisher: BehaviorSubject<any[]>;
     constructor(http: HttpClientPlus, router: Router);
 }

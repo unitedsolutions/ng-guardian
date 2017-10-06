@@ -14,7 +14,7 @@ _.extend(Guardian.prototype, {
     links: links,
     routes: routes
 });
-var GuardianModule = (function () {
+var GuardianModule = /** @class */ (function () {
     function GuardianModule() {
     }
     GuardianModule.decorators = [

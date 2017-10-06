@@ -4,10 +4,11 @@
 	(factory((global.ngGuardian = {}),global._,global.ng.core,global.ngHttpClientPlus,global.ng.router,global.Rx));
 }(this, (function (exports,_,core,ngHttpClientPlus,router,rxjs) { 'use strict';
 
-var Guardian = (function () {
+var Guardian = /** @class */ (function () {
     function Guardian(http, router$$1) {
         this.http = http;
         this.router = router$$1;
+        this.history = [];
         this.linksPublisher = new rxjs.BehaviorSubject([]);
     }
     Guardian.decorators = [
@@ -198,11 +199,20 @@ var redirectCapturer = function (guardian) {
     }
 };
 
+var historian = function () {
+    var _this = this;
+    this.router.events.filter(function (evt) { return evt instanceof router.NavigationEnd; }).subscribe(function (evt) {
+        _this.history.push(evt.url);
+        _this.history.splice(10);
+    });
+};
+
 var init = function (configs$$1) {
     _.extend(this, { configs: configs$$1 });
     _.extend(configs, configs$$1, { guardian: this });
     rolesAssembler(this);
     redirectCapturer(this);
+    historian.call(this);
     if (this.http.getToken()) {
         return this.login();
     }
@@ -261,7 +271,7 @@ _.extend(Guardian.prototype, {
     links: links,
     routes: routes
 });
-var GuardianModule = (function () {
+var GuardianModule = /** @class */ (function () {
     function GuardianModule() {
     }
     GuardianModule.decorators = [

@@ -13,6 +13,7 @@ export class Guardian {
   configs;
   defaultUrl;
   redirectUrl;
+  history = [];
   linksPublisher = new BehaviorSubject([]);
   
   constructor(public http: HttpClientPlus, public router: Router) {}
