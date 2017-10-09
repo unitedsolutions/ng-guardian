@@ -1,1 +1,1 @@
-export default function (credentials: any): any;
+export default function (credentials: any): Promise<{}>;
