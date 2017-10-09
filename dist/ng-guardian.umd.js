@@ -240,6 +240,7 @@ var autoLogoutSetter = function (operation) {
 var login = function (credentials) {
     var _this = this;
     var promise = this.http.post(this.configs.loginUrl, credentials).toPromise();
+    promise.catch(function (e) { });
     promise.then(function (data) {
         var fields = ['routes', 'token'];
         var _a = _.pick(data, fields), routes = _a.routes, token = _a.token;

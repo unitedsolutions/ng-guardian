@@ -5,6 +5,8 @@ import roleSetter       from '../role-setter/role-setter';
 export default function(credentials) {
   let promise = this.http.post(this.configs.loginUrl, credentials).toPromise();
   
+  promise.catch(e => {});
+  
   promise.then(data => {
     let fields = ['routes', 'token'];
     let {routes, token} = _.pick(data, fields);
