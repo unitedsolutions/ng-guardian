@@ -239,7 +239,8 @@ var autoLogoutSetter = function (operation) {
 
 var login = function (credentials) {
     var _this = this;
-    this.http.post(this.configs.loginUrl, credentials).subscribe(function (data) {
+    var promise = this.http.post(this.configs.loginUrl, credentials).toPromise();
+    promise.then(function (data) {
         var fields = ['routes', 'token'];
         var _a = _.pick(data, fields), routes = _a.routes, token = _a.token;
         _this.http.setToken(token);
@@ -248,6 +249,7 @@ var login = function (credentials) {
         roleSetter.call(_this, 'auth', true, routes);
         autoLogoutSetter('add');
     });
+    return promise;
 };
 
 var logout = function () {

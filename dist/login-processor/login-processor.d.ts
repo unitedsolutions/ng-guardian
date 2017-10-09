@@ -1,1 +1,1 @@
-export default function (credentials: any): void;
+export default function (credentials: any): any;
