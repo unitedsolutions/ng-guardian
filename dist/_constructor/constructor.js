@@ -1,4 +1,3 @@
-import { HttpClientPlus } from 'ng-http-client-plus';
 import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
@@ -14,7 +13,7 @@ var Guardian = /** @class */ (function () {
     ];
     /** @nocollapse */
     Guardian.ctorParameters = function () { return [
-        { type: HttpClientPlus, },
+        null,
         { type: Router, },
     ]; };
     return Guardian;

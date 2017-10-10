@@ -16,7 +16,7 @@ var Guardian = /** @class */ (function () {
     ];
     /** @nocollapse */
     Guardian.ctorParameters = function () { return [
-        { type: ngHttpClientPlus.HttpClientPlus, },
+        null,
         { type: router.Router, },
     ]; };
     return Guardian;
