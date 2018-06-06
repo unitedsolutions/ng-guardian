@@ -16,12 +16,12 @@ export default function routesFilterer(routes, approvedRoutes, role, paths = [],
       if(children) {
         paths = paths.concat(path);
         newRoute.children = routesFilterer(route.children, children, role, paths);
+        paths = [];
       }
       
       newRoutes.push(newRoute);
     }
   });
     
-  paths = [];
   return newRoutes;
 }
