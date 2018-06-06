@@ -20,8 +20,8 @@ export default function routesFilterer(routes, approvedRoutes, role, paths = [],
       
       newRoutes.push(newRoute);
     }
-    paths = [];
   });
-  
+    
+  paths = [];
   return newRoutes;
 }

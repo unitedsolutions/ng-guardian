@@ -17,8 +17,8 @@ export default function routesFilterer(routes, approvedRoutes, role, paths, newR
             }
             newRoutes.push(newRoute);
         }
-        paths = [];
     });
+    paths = [];
     return newRoutes;
 }
 //# sourceMappingURL=routes-filterer.js.map

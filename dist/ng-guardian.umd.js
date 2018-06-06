@@ -51,8 +51,8 @@ function routesFilterer(routes, approvedRoutes, role, paths, newRoutes) {
             }
             newRoutes.push(newRoute);
         }
-        paths = [];
     });
+    paths = [];
     return newRoutes;
 }
 
