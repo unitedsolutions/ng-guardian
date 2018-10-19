@@ -15,6 +15,7 @@ export class Guardian {
   redirectUrl;
   history = [];
   linksPublisher = new BehaviorSubject([]);
+  auth;
   
   constructor(public http: HttpClientPlus, public router: Router) {}
 }
