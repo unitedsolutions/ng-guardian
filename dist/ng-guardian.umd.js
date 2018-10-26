@@ -258,9 +258,24 @@ var login = function (credentials) {
 };
 
 var logout = function () {
-    autoLogoutSetter('remove');
-    roleSetter.call(this, 'noAuth');
-    this.http.removeToken();
+    var _this = this;
+    return new Promise(function (resolve, reject) {
+        _this.http.get(_this.configs.logoutUrl).subscribe(function (data) {
+            _this.auth = data.auth;
+            _.extend(_this, { data: data });
+            // clean up
+            autoLogoutSetter('remove');
+            roleSetter.call(_this, 'noAuth');
+            _this.http.removeToken();
+            resolve(data);
+        }, function (err) {
+            // clean up
+            autoLogoutSetter('remove');
+            roleSetter.call(_this, 'noAuth');
+            _this.http.removeToken();
+            return reject(err);
+        });
+    });
 };
 
 var links = function () {
