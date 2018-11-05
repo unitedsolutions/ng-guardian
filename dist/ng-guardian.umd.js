@@ -10,6 +10,7 @@ var Guardian = /** @class */ (function () {
         this.router = router$$1;
         this.history = [];
         this.linksPublisher = new rxjs.BehaviorSubject([]);
+        this.sessionStatus = new rxjs.BehaviorSubject('');
     }
     Guardian.decorators = [
         { type: core.Injectable },
@@ -30,7 +31,15 @@ var roles = {
 var configs = {
     timeout: null,
     guardian: null,
-    logoutTimeout: null
+    logoutTimeout: 15,
+    logoutRedirctEnabled: true,
+    gettingSettingsFromServer: false,
+    serverSettngs: // can be filled up with server configuration (if existing)
+    {
+        sessionTimeout: null,
+    },
+    loginUrl: '',
+    logoutUrl: '',
 };
 
 function routesFilterer(routes, approvedRoutes, role, paths, newRoutes) {
@@ -223,7 +232,7 @@ var init = function (configs$$1) {
 var autoLogoutHandler = _.debounce(function () {
     clearTimeout(configs.timeout);
     configs.timeout = setTimeout(function () {
-        configs.guardian.logout();
+        configs.guardian.logout('TIMEOUT');
     }, configs.logoutTimeout * 60000);
 }, 500);
 
@@ -240,41 +249,70 @@ var autoLogoutSetter = function (operation) {
 
 var login = function (credentials) {
     var _this = this;
+    if (configs.gettingSettingsFromServer === true) {
+        if (configs.serverSettngs) {
+            credentials['serverSettngs'] = configs.serverSettngs;
+        }
+    }
     return new Promise(function (resolve, reject) {
-        _this.http.post(_this.configs.loginUrl, credentials).subscribe(function (data) {
-            var fields = ["routes", "token", "result"];
-            var _a = _.pick(data, fields), routes = _a.routes, token = _a.token, result = _a.result;
-            _this.auth = result;
+        _this.http.post(configs.loginUrl, credentials).subscribe(function (data) {
+            var fields = ["routes", "token", "responseData"];
+            var _a = _.pick(data, fields), routes = _a.routes, token = _a.token, responseData = _a.responseData;
+            // authentification status
+            _this.auth = responseData.auth;
+            if (responseData.auth) {
+                _this.sessionStatus.next(responseData.auth.auth === true ? 'LOGGED_IN' : 'NO_AUTH');
+            }
+            else {
+                _this.sessionStatus.next('NO_AUTH');
+            }
+            // server settings
+            if (configs.gettingSettingsFromServer === true) {
+                if (responseData && responseData.settings) {
+                    autoLogoutSetter('remove');
+                    configs.serverSettngs.sessionTimeout = responseData.settings.sessionTimeout;
+                    configs.logoutTimeout = responseData.settings.sessionTimeout;
+                }
+            }
             _this.http.setToken(token);
             data = _.omit(data, fields);
             _.extend(_this, { data: data });
             roleSetter.call(_this, "auth", true, routes);
             autoLogoutSetter("add");
-            resolve({ auth: (result ? result : 'ok'), data: data });
+            resolve({ auth: (responseData.auth ? responseData.auth : 'ok'), data: data });
         }, function (err) {
             reject(err);
         });
     });
 };
 
-var logout = function () {
+var logout = function (logoutCode) {
     var _this = this;
+    if (this.sessionStatus.value !== 'LOGGED_IN') {
+        return; // doing nothing
+    }
     return new Promise(function (resolve, reject) {
-        _this.http.get(_this.configs.logoutUrl).subscribe(function (data) {
-            _this.auth = data.auth;
-            _.extend(_this, { data: data });
-            // clean up
-            autoLogoutSetter('remove');
-            roleSetter.call(_this, 'noAuth');
-            _this.http.removeToken();
-            resolve(data);
+        if ((!logoutCode) || (logoutCode.length === 0)) {
+            logoutCode = 'USER_LOGOUT';
+        }
+        _this.http.post(_this.configs.logoutUrl, { logoutCode: logoutCode }).subscribe(function (data) {
+            if (data) {
+                _this.auth = data.auth;
+                var returnLogoutCode = ((data.auth) && (data.auth.code)) ? data.auth.code : 'LOGOUT';
+                if (returnLogoutCode !== logoutCode) {
+                    _this.sessionStatus.next(returnLogoutCode);
+                }
+                _.extend(_this, { data: data });
+                resolve(data);
+            }
         }, function (err) {
-            // clean up
-            autoLogoutSetter('remove');
-            roleSetter.call(_this, 'noAuth');
-            _this.http.removeToken();
+            _this.sessionStatus.next('LOGOUT_WITH_ERROR');
             return reject(err);
         });
+        _this.sessionStatus.next(logoutCode);
+        autoLogoutSetter('remove');
+        roleSetter.call(_this, 'noAuth', configs.logoutRedirctEnabled);
+        _this.http.removeToken();
     });
 };
 

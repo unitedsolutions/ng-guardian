@@ -14,6 +14,7 @@ export declare class Guardian {
     redirectUrl: any;
     history: any[];
     linksPublisher: BehaviorSubject<any[]>;
+    sessionStatus: BehaviorSubject<string>;
     auth: any;
     constructor(http: HttpClientPlus, router: Router);
 }
