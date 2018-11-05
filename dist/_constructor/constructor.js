@@ -8,6 +8,7 @@ var Guardian = /** @class */ (function () {
         this.router = router;
         this.history = [];
         this.linksPublisher = new BehaviorSubject([]);
+        this.sessionStatus = new BehaviorSubject('');
     }
     Guardian.decorators = [
         { type: Injectable },

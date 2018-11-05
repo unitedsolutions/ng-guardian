@@ -15,6 +15,13 @@ declare const roles: {
 declare const configs: {
     timeout: any;
     guardian: any;
-    logoutTimeout: any;
+    logoutTimeout: number;
+    logoutRedirctEnabled: boolean;
+    gettingSettingsFromServer: boolean;
+    serverSettngs: {
+        sessionTimeout: any;
+    };
+    loginUrl: string;
+    logoutUrl: string;
 };
 export { configs, roles };

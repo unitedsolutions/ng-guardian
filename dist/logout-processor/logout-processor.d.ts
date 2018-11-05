@@ -1,1 +1,1 @@
-export default function (): Promise<{}>;
+export default function (logoutCode: any): Promise<{}>;
