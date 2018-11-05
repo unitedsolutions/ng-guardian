@@ -7,7 +7,15 @@ const roles = {
 const configs = {
   timeout: null,
   guardian: null,
-  logoutTimeout: null
+  logoutTimeout: 15,
+  logoutRedirctEnabled: true,
+  gettingSettingsFromServer: false,
+  serverSettngs:  // can be filled up with server configuration (if existing)
+  {
+    sessionTimeout: null,
+  },
+  loginUrl:'',
+  logoutUrl:'',
 };
 
 export {

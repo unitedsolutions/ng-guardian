@@ -1,26 +1,36 @@
 import * as _           from "lodash";
 import autoLogoutSetter from '../auto-logout-setter/auto-logout-setter';
 import roleSetter       from '../role-setter/role-setter';
+import {configs} from '../_lib/vars';
 
-export default function() {
+export default function(logoutCode) {
+  if (this.sessionStatus.value !== 'LOGGED_IN'){
+    return; // doing nothing
+  }
   return new Promise((resolve, reject) => {
-    this.http.get(this.configs.logoutUrl).subscribe(
+    if ((!logoutCode) || (logoutCode.length === 0)) {
+       logoutCode = 'USER_LOGOUT';
+    }
+    this.http.post(this.configs.logoutUrl, {logoutCode}).subscribe(
       data => {
-        this.auth = data.auth;
-        _.extend(this, { data});
-        // clean up
-        autoLogoutSetter('remove');
-        roleSetter.call(this, 'noAuth');
-        this.http.removeToken();
-        resolve(data);
+        if (data) {
+          this.auth = data.auth;
+          const returnLogoutCode =((data.auth) && (data.auth.code)) ? data.auth.code : 'LOGOUT';
+          if (returnLogoutCode !== logoutCode) {
+            this.sessionStatus.next(returnLogoutCode);
+          }
+          _.extend(this, { data});
+          resolve(data);
+        }
       },
       err => {
-        // clean up
-        autoLogoutSetter('remove');
-        roleSetter.call(this, 'noAuth');
-        this.http.removeToken();
+        this.sessionStatus.next('LOGOUT_WITH_ERROR');
         return reject(err);
       }
     );
+    this.sessionStatus.next(logoutCode);
+    autoLogoutSetter('remove');
+    roleSetter.call(this, 'noAuth', configs.logoutRedirctEnabled);
+    this.http.removeToken();
   });
 }
