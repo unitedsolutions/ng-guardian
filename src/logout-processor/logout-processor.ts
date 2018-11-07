@@ -1,5 +1,6 @@
 import * as _           from "lodash";
 import autoLogoutSetter from '../auto-logout-setter/auto-logout-setter';
+import autoLockSetter from "../auto-lock-setter/auto-lock-setter";
 import roleSetter       from '../role-setter/role-setter';
 import {configs} from '../_lib/vars';
 
@@ -30,6 +31,7 @@ export default function(logoutCode) {
     );
     this.sessionStatus.next(logoutCode);
     autoLogoutSetter('remove');
+    autoLockSetter('remove');
     roleSetter.call(this, 'noAuth', configs.logoutRedirctEnabled);
     this.http.removeToken();
   });

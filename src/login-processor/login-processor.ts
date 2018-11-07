@@ -1,5 +1,6 @@
 import * as _ from "lodash";
 import autoLogoutSetter from "../auto-logout-setter/auto-logout-setter";
+import autoLockSetter from "../auto-lock-setter/auto-lock-setter";
 import roleSetter from "../role-setter/role-setter";
 import {configs} from '../_lib/vars';
 
@@ -37,6 +38,7 @@ export default function(credentials) {
         _.extend(this, { data });
         roleSetter.call(this, "auth", true, routes);
         autoLogoutSetter("add");
+        autoLockSetter("add");
         resolve({auth: (responseData.auth ? responseData.auth : 'ok'), data: data});
       },
       err => {

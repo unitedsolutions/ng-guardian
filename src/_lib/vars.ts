@@ -16,6 +16,11 @@ const configs = {
   },
   loginUrl:'',
   logoutUrl:'',
+
+  lockDownEnabled: false,
+  lockDown: null,
+  lockDownWait: 5,
+  unlockUrl:'',
 };
 
 export {
