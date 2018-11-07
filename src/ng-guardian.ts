@@ -5,6 +5,7 @@ import {Guardian}             from './_constructor/constructor';
 import init                   from './initializer/initializer';
 import login                  from './login-processor/login-processor';
 import logout                 from './logout-processor/logout-processor';
+import unlock                 from './unlock-processor/unlock-processor';
 import links                  from './links-getter/links-getter';
 import routes                 from './routes-getter/routes-getter';
 
@@ -12,6 +13,7 @@ _.extend(Guardian.prototype, {
   init,
   login,
   logout,
+  unlock,
   links,
   routes
 });

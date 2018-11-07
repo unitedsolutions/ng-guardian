@@ -8,6 +8,7 @@ export class Guardian {
   init;
   login;
   logout;
+  unlock;
   links;
   role;
   configs;
