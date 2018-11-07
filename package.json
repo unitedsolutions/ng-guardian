@@ -28,7 +28,7 @@
     "routing"
   ],
   "dependencies": {
-    "lodash": "^4.17.4",
+    "lodash": "^4.17.11",
     "ng-http-client-plus": "git+ssh://git@github.com/unitedsolutions/ng-http-client-plus.git#169726283a85772116610f85525cdf7cfc14f197"
   },
   "peerDependencies": {
@@ -62,7 +62,7 @@
     "core-js": "^2.4.1",
     "jasmine": "^2.4.1",
     "jasmine-core": "^2.4.1",
-    "karma": "^1.3.0",
+    "karma": "^3.1.1",
     "karma-chrome-launcher": "^2.0.0",
     "karma-cli": "^1.0.1",
     "karma-jasmine": "^1.0.2",
@@ -70,8 +70,8 @@
     "karma-mocha-reporter": "^2.2.3",
     "karma-phantomjs-launcher": "^1.0.2",
     "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^2.0.1",
-    "phantomjs-prebuilt": "^2.1.7",
+    "karma-webpack": "^3.0.5",
+    "phantomjs-prebuilt": "^2.1.16",
     "rimraf": "^2.6.1",
     "rollup": "^0.50.0",
     "systemjs": "0.19.39",
