@@ -15,6 +15,10 @@ var configs = {
     },
     loginUrl: '',
     logoutUrl: '',
+    lockDownEnabled: false,
+    lockDown: null,
+    lockDownWait: 5,
+    unlockUrl: '',
 };
 export { configs, roles };
 //# sourceMappingURL=vars.js.map

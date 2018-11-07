@@ -7,6 +7,7 @@ export declare class Guardian {
     init: any;
     login: any;
     logout: any;
+    unlock: any;
     links: any;
     role: any;
     configs: any;
