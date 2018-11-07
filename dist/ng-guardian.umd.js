@@ -40,6 +40,10 @@ var configs = {
     },
     loginUrl: '',
     logoutUrl: '',
+    lockDownEnabled: false,
+    lockDown: null,
+    lockDownWait: 5,
+    unlockUrl: '',
 };
 
 function routesFilterer(routes, approvedRoutes, role, paths, newRoutes) {
@@ -247,6 +251,29 @@ var autoLogoutSetter = function (operation) {
     }
 };
 
+var autoLogoutHandler$1 = _.debounce(function () {
+    clearTimeout(configs.lockDown);
+    configs.lockDown = setTimeout(function () {
+        if (configs.guardian.sessionStatus.value !== 'LOGGED_IN' ||
+            configs.guardian.sessionStatus.value !== 'LOCKED_DOWN') {
+            configs.guardian.sessionStatus.next('LOCKED_DOWN');
+        }
+    }, configs.lockDownWait * 60000);
+}, 500);
+
+var autoLockSetter = function (operation) {
+    if (configs.lockDownEnabled == true) {
+        var methodName_1 = operation + 'EventListener';
+        var eventNames = ['click', 'keyup', 'mousemove'];
+        eventNames.forEach(function (eventName) {
+            document[methodName_1](eventName, autoLogoutHandler$1);
+        });
+        if (operation === 'add') {
+            document.dispatchEvent(new Event(eventNames[0]));
+        }
+    }
+};
+
 var login = function (credentials) {
     var _this = this;
     if (configs.gettingSettingsFromServer === true) {
@@ -279,6 +306,7 @@ var login = function (credentials) {
             _.extend(_this, { data: data });
             roleSetter.call(_this, "auth", true, routes);
             autoLogoutSetter("add");
+            autoLockSetter("add");
             resolve({ auth: (responseData.auth ? responseData.auth : 'ok'), data: data });
         }, function (err) {
             reject(err);
@@ -311,8 +339,41 @@ var logout = function (logoutCode) {
         });
         _this.sessionStatus.next(logoutCode);
         autoLogoutSetter('remove');
+        autoLockSetter('remove');
         roleSetter.call(_this, 'noAuth', configs.logoutRedirctEnabled);
         _this.http.removeToken();
+    });
+};
+
+var unlock = function (credentials) {
+    var _this = this;
+    if (configs.gettingSettingsFromServer === true) {
+        if (configs.serverSettngs) {
+            credentials['serverSettngs'] = configs.serverSettngs;
+        }
+    }
+    return new Promise(function (resolve, reject) {
+        if (configs.lockDownEnabled === false) {
+            return resolve({ message: 'lockDown functionality is dissabled (configs.lockDownEnabled = false)' });
+        }
+        if (configs.unlockUrl === null || configs.unlockUrl.length < 1) {
+            return resolve({ message: 'configs.unlockUrl is not defined,' });
+        }
+        _this.http.post(configs.unlockUrl, credentials).subscribe(function (data) {
+            _this.sessionStatus.next('LOGGED_IN');
+            // reset lockDown
+            autoLockSetter("remove");
+            configs.lockDown = null;
+            autoLockSetter("add");
+            if (data) {
+                return resolve(data);
+            }
+            else {
+                return resolve({ ok: 1 });
+            }
+        }, function (err) {
+            reject(err);
+        });
     });
 };
 
@@ -328,6 +389,7 @@ _.extend(Guardian.prototype, {
     init: init,
     login: login,
     logout: logout,
+    unlock: unlock,
     links: links,
     routes: routes
 });

@@ -23,5 +23,9 @@ declare const configs: {
     };
     loginUrl: string;
     logoutUrl: string;
+    lockDownEnabled: boolean;
+    lockDown: any;
+    lockDownWait: number;
+    unlockUrl: string;
 };
 export { configs, roles };
