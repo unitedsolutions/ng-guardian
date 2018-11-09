@@ -1,8 +1,8 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash'), require('@angular/core'), require('ng-http-client-plus'), require('@angular/router'), require('rxjs')) :
-	typeof define === 'function' && define.amd ? define(['exports', 'lodash', '@angular/core', 'ng-http-client-plus', '@angular/router', 'rxjs'], factory) :
-	(factory((global.ngGuardian = {}),global._,global.ng.core,global.ngHttpClientPlus,global.ng.router,global.Rx));
-}(this, (function (exports,_,core,ngHttpClientPlus,router,rxjs) { 'use strict';
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('lodash'), require('@angular/core'), require('ng-http-client-plus'), require('@angular/router'), require('rxjs'), require('rxjs/operators')) :
+	typeof define === 'function' && define.amd ? define(['exports', 'lodash', '@angular/core', 'ng-http-client-plus', '@angular/router', 'rxjs', 'rxjs/operators'], factory) :
+	(factory((global.ngGuardian = {}),global._,global.ng.core,global.ngHttpClientPlus,global.ng.router,global.Rx,global.operators));
+}(this, (function (exports,_,core,ngHttpClientPlus,router,rxjs,operators) { 'use strict';
 
 var Guardian = /** @class */ (function () {
     function Guardian(http, router$$1) {
@@ -215,7 +215,7 @@ var redirectCapturer = function (guardian) {
 
 var historian = function () {
     var _this = this;
-    this.router.events.filter(function (evt) { return evt instanceof router.NavigationEnd; }).subscribe(function (evt) {
+    this.router.events.pipe(operators.filter(function (evt) { return evt instanceof router.NavigationEnd; })).subscribe(function (evt) {
         _this.history.unshift(evt.url);
         _this.history.splice(10);
     });
@@ -277,7 +277,7 @@ var autoLockSetter = function (operation) {
 var login = function (credentials) {
     var _this = this;
     if (configs.gettingSettingsFromServer === true) {
-        if (configs.serverSettngs) {
+        if (configs.serverSettngs && credentials) {
             credentials['serverSettngs'] = configs.serverSettngs;
         }
     }
