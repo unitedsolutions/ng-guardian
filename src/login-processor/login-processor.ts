@@ -6,7 +6,7 @@ import {configs} from '../_lib/vars';
 
 export default function(credentials) {
   if (configs.gettingSettingsFromServer === true) {
-    if (configs.serverSettngs) {
+    if (configs.serverSettngs && credentials) {
       credentials['serverSettngs'] = configs.serverSettngs;
     } 
   }
