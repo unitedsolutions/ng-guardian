@@ -1,5 +1,4 @@
 import {NavigationEnd} from '@angular/router';
-
 import { filter } from 'rxjs/operators';
 
 export default function() {
