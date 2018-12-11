@@ -15,9 +15,22 @@ export class Guardian {
   defaultUrl;
   redirectUrl;
   history = [];
-  linksPublisher = new BehaviorSubject([]);
+  linksPublisher = new BehaviorSubject<any>(null);
   sessionStatus = new BehaviorSubject<string>('');
+  navLinks = new BehaviorSubject<any>(null);
   auth;
   
   constructor(public http: HttpClientPlus, public router: Router) {}
 }
+
+export class NavItem {
+  parent: string;
+  label: string;
+  path: string;
+  constructor(parent: string, label: string, path: string) {
+    this.parent = parent ? parent : 'undefined';
+    this.path = path ? path : '';
+    this.label = label ? label : path;
+  }
+}
+
