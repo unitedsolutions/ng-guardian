@@ -7,8 +7,9 @@ var Guardian = /** @class */ (function () {
         this.http = http;
         this.router = router;
         this.history = [];
-        this.linksPublisher = new BehaviorSubject([]);
+        this.linksPublisher = new BehaviorSubject(null);
         this.sessionStatus = new BehaviorSubject('');
+        this.navLinks = new BehaviorSubject(null);
     }
     Guardian.decorators = [
         { type: Injectable },
@@ -21,4 +22,13 @@ var Guardian = /** @class */ (function () {
     return Guardian;
 }());
 export { Guardian };
+var NavItem = /** @class */ (function () {
+    function NavItem(parent, label, path) {
+        this.parent = parent ? parent : 'undefined';
+        this.path = path ? path : '';
+        this.label = label ? label : path;
+    }
+    return NavItem;
+}());
+export { NavItem };
 //# sourceMappingURL=constructor.js.map

@@ -14,8 +14,15 @@ export declare class Guardian {
     defaultUrl: any;
     redirectUrl: any;
     history: any[];
-    linksPublisher: BehaviorSubject<any[]>;
+    linksPublisher: BehaviorSubject<any>;
     sessionStatus: BehaviorSubject<string>;
+    navLinks: BehaviorSubject<any>;
     auth: any;
     constructor(http: HttpClientPlus, router: Router);
+}
+export declare class NavItem {
+    parent: string;
+    label: string;
+    path: string;
+    constructor(parent: string, label: string, path: string);
 }

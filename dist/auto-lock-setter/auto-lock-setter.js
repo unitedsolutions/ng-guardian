@@ -1,6 +1,6 @@
 import autoLogoutHandler from './_lib/auto-lock-handler';
 import { configs } from '../_lib/vars';
-export default function (operation) {
+export default (function (operation) {
     if (configs.lockDownEnabled == true) {
         var methodName_1 = operation + 'EventListener';
         var eventNames = ['click', 'keyup', 'mousemove'];
@@ -11,5 +11,5 @@ export default function (operation) {
             document.dispatchEvent(new Event(eventNames[0]));
         }
     }
-};
+});
 //# sourceMappingURL=auto-lock-setter.js.map

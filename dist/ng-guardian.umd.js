@@ -9,8 +9,9 @@ var Guardian = /** @class */ (function () {
         this.http = http;
         this.router = router$$1;
         this.history = [];
-        this.linksPublisher = new rxjs.BehaviorSubject([]);
+        this.linksPublisher = new rxjs.BehaviorSubject(null);
         this.sessionStatus = new rxjs.BehaviorSubject('');
+        this.navLinks = new rxjs.BehaviorSubject(null);
     }
     Guardian.decorators = [
         { type: core.Injectable },
@@ -21,6 +22,14 @@ var Guardian = /** @class */ (function () {
         { type: router.Router, },
     ]; };
     return Guardian;
+}());
+var NavItem = /** @class */ (function () {
+    function NavItem(parent, label, path) {
+        this.parent = parent ? parent : 'undefined';
+        this.path = path ? path : '';
+        this.label = label ? label : path;
+    }
+    return NavItem;
 }());
 
 var roles = {
@@ -98,7 +107,7 @@ var roleSetter = function (roleName, navigate, approvedRoutes) {
     if (navigate === void 0) { navigate = true; }
     var role = roles[roleName];
     var _a = roles.all, allRoutes = _a.routes, allDefault = _a._default;
-    var _b = this, linksPublisher = _b.linksPublisher, router$$1 = _b.router, redirectUrl = _b.redirectUrl;
+    var _b = this, linksPublisher = _b.linksPublisher, navLinks = _b.navLinks, router$$1 = _b.router, redirectUrl = _b.redirectUrl;
     var routes = role.routes, _default = role._default;
     if (approvedRoutes) {
         var _defaultHolder = { _default: '' };
@@ -117,7 +126,33 @@ var roleSetter = function (roleName, navigate, approvedRoutes) {
         routes.push({ path: '', pathMatch: 'full', redirectTo: _default });
         routes.push({ path: '**', redirectTo: _default });
     }
-    linksPublisher.next({ role: roleName, links: linksGenerator(routes) });
+    var links = linksGenerator(routes);
+    linksPublisher.next({ role: roleName, links: links });
+    // Generate navLinks
+    var authValidRoutes = [];
+    links.forEach(function (element) {
+        if (element.children) {
+            element.children.forEach(function (route) {
+                if (route.link) {
+                    var path = route.path.length > 0 ? route.path : element.path;
+                    authValidRoutes.push(new NavItem(route.group, route.label, path));
+                }
+            });
+        }
+        else {
+            if (element.link) {
+                authValidRoutes.push(new NavItem(element.group, element.label, element.path));
+            }
+        }
+    });
+    var groupBy = function (xs, key) {
+        return xs.reduce(function (rv, x) {
+            (rv[x[key]] = rv[x[key]] || []).push(x);
+            return rv;
+        }, {});
+    };
+    var navLinksData = groupBy(authValidRoutes, 'parent');
+    navLinks.next(navLinksData);
     router$$1.resetConfig(routes);
     if (navigate) {
         delete this.redirectUrl;
@@ -134,10 +169,10 @@ function childrenGetter(paths, children) {
     childrenGetter(paths, route.children);
 }
 
-var routeSterilizer = function (route, roleName) {
+var routeSterilizer = (function (route, roleName) {
     route = _.omit(route, ['children']);
     return _.extend(route, { children: [], role: roleName });
-};
+});
 
 function routeGetter(paths, roleRoute, mainRoute, roleName) {
     var path = paths.shift();
@@ -202,16 +237,16 @@ function routeToRoleLinker(route, mainRoute, parentRoute, paths) {
     });
 }
 
-var rolesAssembler = function (guardian) {
+var rolesAssembler = (function (guardian) {
     _.each(guardian.router.config, function (route) { return routeToRoleLinker(route); });
-};
+});
 
-var redirectCapturer = function (guardian) {
+var redirectCapturer = (function (guardian) {
     var pathname = location.pathname;
     if (pathname !== '/') {
         guardian.redirectUrl = pathname;
     }
-};
+});
 
 var historian = function () {
     var _this = this;
@@ -240,7 +275,7 @@ var autoLogoutHandler = _.debounce(function () {
     }, configs.logoutTimeout * 60000);
 }, 500);
 
-var autoLogoutSetter = function (operation) {
+var autoLogoutSetter = (function (operation) {
     var methodName = operation + 'EventListener';
     var eventNames = ['click', 'keyup', 'mousemove'];
     eventNames.forEach(function (eventName) {
@@ -249,7 +284,7 @@ var autoLogoutSetter = function (operation) {
     if (operation === 'add') {
         document.dispatchEvent(new Event(eventNames[0]));
     }
-};
+});
 
 var autoLogoutHandler$1 = _.debounce(function () {
     clearTimeout(configs.lockDown);
@@ -261,7 +296,7 @@ var autoLogoutHandler$1 = _.debounce(function () {
     }, configs.lockDownWait * 60000);
 }, 500);
 
-var autoLockSetter = function (operation) {
+var autoLockSetter = (function (operation) {
     if (configs.lockDownEnabled == true) {
         var methodName_1 = operation + 'EventListener';
         var eventNames = ['click', 'keyup', 'mousemove'];
@@ -272,7 +307,7 @@ var autoLockSetter = function (operation) {
             document.dispatchEvent(new Event(eventNames[0]));
         }
     }
-};
+});
 
 var login = function (credentials) {
     var _this = this;
