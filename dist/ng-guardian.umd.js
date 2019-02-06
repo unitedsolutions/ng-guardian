@@ -351,7 +351,8 @@ var login = function (credentials) {
 
 var logout = function (logoutCode) {
     var _this = this;
-    if (this.sessionStatus.value !== 'LOGGED_IN') {
+    if (this.sessionStatus.value !== 'LOGGED_IN'
+        && this.sessionStatus.value !== 'LOCKED_DOWN') {
         return; // doing nothing
     }
     return new Promise(function (resolve, reject) {

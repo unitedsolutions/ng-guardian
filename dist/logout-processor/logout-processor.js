@@ -5,7 +5,8 @@ import roleSetter from '../role-setter/role-setter';
 import { configs } from '../_lib/vars';
 export default function (logoutCode) {
     var _this = this;
-    if (this.sessionStatus.value !== 'LOGGED_IN') {
+    if (this.sessionStatus.value !== 'LOGGED_IN'
+        && this.sessionStatus.value !== 'LOCKED_DOWN') {
         return; // doing nothing
     }
     return new Promise(function (resolve, reject) {
