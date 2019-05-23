@@ -10,6 +10,7 @@ var Guardian = /** @class */ (function () {
         this.linksPublisher = new BehaviorSubject(null);
         this.sessionStatus = new BehaviorSubject('');
         this.navLinks = new BehaviorSubject(null);
+        this.data = new BehaviorSubject(null);
     }
     Guardian.decorators = [
         { type: Injectable },
