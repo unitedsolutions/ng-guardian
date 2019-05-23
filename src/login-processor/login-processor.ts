@@ -12,9 +12,9 @@ export default function(credentials) {
   }
   return new Promise((resolve, reject) => {
     this.http.post(configs.loginUrl, credentials).subscribe(
-      data => {
+      reqData => {
         let fields = ["routes", "token", "responseData"];
-        let { routes, token, responseData } = _.pick(data, fields);
+        let { routes, token, responseData } = _.pick(reqData, fields);
         
         // authentification status
         this.auth = responseData.auth;
@@ -34,12 +34,12 @@ export default function(credentials) {
         }
         
         this.http.setToken(token);
-        data = _.omit(data, fields);
-        this.data = data;
+        let clone = _.omit(reqData, fields);
+        this.data.next(clone);
         roleSetter.call(this, "auth", true, routes);
         autoLogoutSetter("add");
         autoLockSetter("add");
-        resolve({auth: (responseData.auth ? responseData.auth : 'ok'), data: data});
+        resolve({auth: (responseData.auth ? responseData.auth : 'ok'), data: reqData});
       },
       err => {
         reject(err);

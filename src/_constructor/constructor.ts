@@ -19,7 +19,7 @@ export class Guardian {
   sessionStatus = new BehaviorSubject<string>('');
   navLinks = new BehaviorSubject<any>(null);
   auth;
-  data;
+  data = new BehaviorSubject<any>(null);
   
   constructor(public http: HttpClientPlus, public router: Router) {}
 }
