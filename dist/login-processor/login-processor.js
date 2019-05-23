@@ -36,7 +36,7 @@ export default function (credentials) {
             roleSetter.call(_this, "auth", true, routes);
             autoLogoutSetter("add");
             autoLockSetter("add");
-            resolve({ auth: (responseData.auth ? responseData.auth : 'ok'), data: reqData });
+            resolve({ auth: (responseData.auth ? responseData.auth : 'ok'), data: clone });
         }, function (err) {
             reject(err);
         });

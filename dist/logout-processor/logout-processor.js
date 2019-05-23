@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import autoLogoutSetter from '../auto-logout-setter/auto-logout-setter';
 import autoLockSetter from "../auto-lock-setter/auto-lock-setter";
 import roleSetter from '../role-setter/role-setter';
@@ -13,16 +12,15 @@ export default function (logoutCode) {
         if ((!logoutCode) || (logoutCode.length === 0)) {
             logoutCode = 'USER_LOGOUT';
         }
-        _this.http.post(_this.configs.logoutUrl, { logoutCode: logoutCode }).subscribe(function (data) {
-            if (data) {
-                _this.auth = data.auth;
-                var returnLogoutCode = ((data.auth) && (data.auth.code)) ? data.auth.code : 'LOGOUT';
+        _this.http.post(_this.configs.logoutUrl, { logoutCode: logoutCode }).subscribe(function (resdata) {
+            if (resdata) {
+                _this.auth = resdata.auth;
+                var returnLogoutCode = ((resdata.auth) && (resdata.auth.code)) ? resdata.auth.code : 'LOGOUT';
                 if (returnLogoutCode !== logoutCode) {
                     _this.sessionStatus.next(returnLogoutCode);
                 }
-                _.extend(_this, { data: data });
                 _this.data.next(null);
-                resolve(data);
+                resolve(resdata);
             }
         }, function (err) {
             _this.sessionStatus.next('LOGOUT_WITH_ERROR');

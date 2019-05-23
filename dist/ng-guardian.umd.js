@@ -343,7 +343,7 @@ var login = function (credentials) {
             roleSetter.call(_this, "auth", true, routes);
             autoLogoutSetter("add");
             autoLockSetter("add");
-            resolve({ auth: (responseData.auth ? responseData.auth : 'ok'), data: reqData });
+            resolve({ auth: (responseData.auth ? responseData.auth : 'ok'), data: clone });
         }, function (err) {
             reject(err);
         });
@@ -360,16 +360,15 @@ var logout = function (logoutCode) {
         if ((!logoutCode) || (logoutCode.length === 0)) {
             logoutCode = 'USER_LOGOUT';
         }
-        _this.http.post(_this.configs.logoutUrl, { logoutCode: logoutCode }).subscribe(function (data) {
-            if (data) {
-                _this.auth = data.auth;
-                var returnLogoutCode = ((data.auth) && (data.auth.code)) ? data.auth.code : 'LOGOUT';
+        _this.http.post(_this.configs.logoutUrl, { logoutCode: logoutCode }).subscribe(function (resdata) {
+            if (resdata) {
+                _this.auth = resdata.auth;
+                var returnLogoutCode = ((resdata.auth) && (resdata.auth.code)) ? resdata.auth.code : 'LOGOUT';
                 if (returnLogoutCode !== logoutCode) {
                     _this.sessionStatus.next(returnLogoutCode);
                 }
-                _.extend(_this, { data: data });
                 _this.data.next(null);
-                resolve(data);
+                resolve(resdata);
             }
         }, function (err) {
             _this.sessionStatus.next('LOGOUT_WITH_ERROR');
@@ -398,14 +397,14 @@ var unlock = function (credentials) {
         if (configs.unlockUrl === null || configs.unlockUrl.length < 1) {
             return resolve({ message: 'configs.unlockUrl is not defined,' });
         }
-        _this.http.post(configs.unlockUrl, credentials).subscribe(function (data) {
+        _this.http.post(configs.unlockUrl, credentials).subscribe(function (resdata) {
             _this.sessionStatus.next('LOGGED_IN');
             // reset lockDown
             autoLockSetter("remove");
             configs.lockDown = null;
             autoLockSetter("add");
-            if (data) {
-                return resolve(data);
+            if (resdata) {
+                return resolve(resdata);
             }
             else {
                 return resolve({ ok: 1 });
