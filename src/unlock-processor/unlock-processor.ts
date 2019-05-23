@@ -16,14 +16,14 @@ export default function(credentials) {
       return resolve({message: 'configs.unlockUrl is not defined,'})
     }
     this.http.post(configs.unlockUrl, credentials).subscribe(
-      data => {
+      resdata => {
         this.sessionStatus.next('LOGGED_IN');
         // reset lockDown
         autoLockSetter("remove");
         configs.lockDown=null;
         autoLockSetter("add");
-        if (data) {
-          return resolve(data);
+        if (resdata) {
+          return resolve(resdata);
         } else {
           return resolve({ok: 1});
         }
