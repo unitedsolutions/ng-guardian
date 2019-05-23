@@ -14,14 +14,14 @@ export default function (credentials) {
         if (configs.unlockUrl === null || configs.unlockUrl.length < 1) {
             return resolve({ message: 'configs.unlockUrl is not defined,' });
         }
-        _this.http.post(configs.unlockUrl, credentials).subscribe(function (data) {
+        _this.http.post(configs.unlockUrl, credentials).subscribe(function (resdata) {
             _this.sessionStatus.next('LOGGED_IN');
             // reset lockDown
             autoLockSetter("remove");
             configs.lockDown = null;
             autoLockSetter("add");
-            if (data) {
-                return resolve(data);
+            if (resdata) {
+                return resolve(resdata);
             }
             else {
                 return resolve({ ok: 1 });

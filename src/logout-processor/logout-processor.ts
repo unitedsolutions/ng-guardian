@@ -14,16 +14,15 @@ export default function(logoutCode) {
        logoutCode = 'USER_LOGOUT';
     }
     this.http.post(this.configs.logoutUrl, {logoutCode}).subscribe(
-      data => {
-        if (data) {
-          this.auth = data.auth;
-          const returnLogoutCode =((data.auth) && (data.auth.code)) ? data.auth.code : 'LOGOUT';
+      resdata => {
+        if (resdata) {
+          this.auth = resdata.auth;
+          const returnLogoutCode =((resdata.auth) && (resdata.auth.code)) ? resdata.auth.code : 'LOGOUT';
           if (returnLogoutCode !== logoutCode) {
             this.sessionStatus.next(returnLogoutCode);
           }
-          _.extend(this, { data});
           this.data.next(null);
-          resolve(data);
+          resolve(resdata);
         }
       },
       err => {
