@@ -35,7 +35,7 @@ export default function(credentials) {
         
         this.http.setToken(token);
         data = _.omit(data, fields);
-        _.extend(this, { data });
+        this.data = data;
         roleSetter.call(this, "auth", true, routes);
         autoLogoutSetter("add");
         autoLockSetter("add");
