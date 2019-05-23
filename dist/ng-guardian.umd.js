@@ -338,7 +338,7 @@ var login = function (credentials) {
             }
             _this.http.setToken(token);
             data = _.omit(data, fields);
-            _.extend(_this, { data: data });
+            _this.data = data;
             roleSetter.call(_this, "auth", true, routes);
             autoLogoutSetter("add");
             autoLockSetter("add");
