@@ -18,7 +18,7 @@ export declare class Guardian {
     sessionStatus: BehaviorSubject<string>;
     navLinks: BehaviorSubject<any>;
     auth: any;
-    data: any;
+    data: BehaviorSubject<any>;
     constructor(http: HttpClientPlus, router: Router);
 }
 export declare class NavItem {

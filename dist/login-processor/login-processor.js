@@ -11,9 +11,9 @@ export default function (credentials) {
         }
     }
     return new Promise(function (resolve, reject) {
-        _this.http.post(configs.loginUrl, credentials).subscribe(function (data) {
+        _this.http.post(configs.loginUrl, credentials).subscribe(function (reqData) {
             var fields = ["routes", "token", "responseData"];
-            var _a = _.pick(data, fields), routes = _a.routes, token = _a.token, responseData = _a.responseData;
+            var _a = _.pick(reqData, fields), routes = _a.routes, token = _a.token, responseData = _a.responseData;
             // authentification status
             _this.auth = responseData.auth;
             if (responseData.auth) {
@@ -31,12 +31,12 @@ export default function (credentials) {
                 }
             }
             _this.http.setToken(token);
-            data = _.omit(data, fields);
-            _this.data = data;
+            var clone = _.omit(reqData, fields);
+            _this.data.next(clone);
             roleSetter.call(_this, "auth", true, routes);
             autoLogoutSetter("add");
             autoLockSetter("add");
-            resolve({ auth: (responseData.auth ? responseData.auth : 'ok'), data: data });
+            resolve({ auth: (responseData.auth ? responseData.auth : 'ok'), data: reqData });
         }, function (err) {
             reject(err);
         });

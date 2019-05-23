@@ -21,6 +21,7 @@ export default function (logoutCode) {
                     _this.sessionStatus.next(returnLogoutCode);
                 }
                 _.extend(_this, { data: data });
+                _this.data.next(null);
                 resolve(data);
             }
         }, function (err) {
@@ -28,6 +29,7 @@ export default function (logoutCode) {
             return reject(err);
         });
         _this.sessionStatus.next(logoutCode);
+        _this.data.next(null);
         autoLogoutSetter('remove');
         autoLockSetter('remove');
         roleSetter.call(_this, 'noAuth', configs.logoutRedirctEnabled);
