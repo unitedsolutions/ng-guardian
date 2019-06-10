@@ -263,6 +263,12 @@ var init = function (configs$$1) {
     rolesAssembler(this);
     redirectCapturer(this);
     historian.call(this);
+    if (!this.http) {
+        this.http = configs$$1.altHttptClientPlus;
+    }
+    if (!this.http) {
+        throw new Error('Guardian does not have HttpClientPlus instance injected.');
+    }
     if (this.http.getToken()) {
         return this.login();
     }
