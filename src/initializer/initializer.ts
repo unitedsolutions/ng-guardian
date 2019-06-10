@@ -12,14 +12,14 @@ export default function(configs) {
   redirectCapturer(this);
   historian.call(this);
 
-  if (!this.http) {
-    throw new Error('Guardian does not have HttpClientPlus instance injected.')
-  }
-  const httpConfigs = configs.httpConfigs;
-  if (!httpConfigs.tokenName) {
-    httpConfigs.tokenName = 'auth-token'; // set default;
-  }
   if (!this.http.configs) {
+    let httpConfigs = configs.httpConfigs;
+    if (!httpConfigs) {
+      httpConfigs = { baseUrl: '', tokenName: 'auth-token' }; // set default;
+    }
+    if (!httpConfigs.tokenName) {
+      httpConfigs.tokenName = 'auth-token'; // set default;
+    }
     this.http.init(httpConfigs);
   }
 
