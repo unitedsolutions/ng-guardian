@@ -10,14 +10,14 @@ export default function (configs) {
     rolesAssembler(this);
     redirectCapturer(this);
     historian.call(this);
-    if (!this.http) {
-        throw new Error('Guardian does not have HttpClientPlus instance injected.');
-    }
-    var httpConfigs = configs.httpConfigs;
-    if (!httpConfigs.tokenName) {
-        httpConfigs.tokenName = 'auth-token'; // set default;
-    }
     if (!this.http.configs) {
+        var httpConfigs = configs.httpConfigs;
+        if (!httpConfigs) {
+            httpConfigs = { baseUrl: '', tokenName: 'auth-token' }; // set default;
+        }
+        if (!httpConfigs.tokenName) {
+            httpConfigs.tokenName = 'auth-token'; // set default;
+        }
         this.http.init(httpConfigs);
     }
     if (this.http.getToken()) {
