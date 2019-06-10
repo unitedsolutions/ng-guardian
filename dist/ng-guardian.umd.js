@@ -264,10 +264,14 @@ var init = function (configs$$1) {
     redirectCapturer(this);
     historian.call(this);
     if (!this.http) {
-        this.http = configs$$1.altHttptClientPlus;
-    }
-    if (!this.http) {
         throw new Error('Guardian does not have HttpClientPlus instance injected.');
+    }
+    var httpConfigs = configs$$1.httpConfigs;
+    if (!httpConfigs.tokenName) {
+        httpConfigs.tokenName = 'auth-token'; // set default;
+    }
+    if (!this.http.configs) {
+        this.http.init(httpConfigs);
     }
     if (this.http.getToken()) {
         return this.login();
