@@ -12,6 +12,13 @@ export default function(configs) {
   redirectCapturer(this);
   historian.call(this);
 
+  if (!this.http) {
+    this.http = configs.altHttptClientPlus;
+  }
+
+  if (!this.http) {
+    throw new Error('Guardian does not have HttpClientPlus instance injected.')
+  }
   if(this.http.getToken()) {
     return this.login();
   }
