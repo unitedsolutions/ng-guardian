@@ -263,11 +263,15 @@ var init = function (configs$$1) {
     rolesAssembler(this);
     redirectCapturer(this);
     historian.call(this);
-    if (!this.http) {
-        this.http = configs$$1.altHttptClientPlus;
-    }
-    if (!this.http) {
-        throw new Error('Guardian does not have HttpClientPlus instance injected.');
+    if (!this.http.configs) {
+        var httpConfigs = configs$$1.httpConfigs;
+        if (!httpConfigs) {
+            httpConfigs = { baseUrl: '', tokenName: 'auth-token' }; // set default;
+        }
+        if (!httpConfigs.tokenName) {
+            httpConfigs.tokenName = 'auth-token'; // set default;
+        }
+        this.http.init(httpConfigs);
     }
     if (this.http.getToken()) {
         return this.login();
@@ -289,7 +293,15 @@ var autoLogoutSetter = (function (operation) {
         document[methodName](eventName, autoLogoutHandler);
     });
     if (operation === 'add') {
-        document.dispatchEvent(new Event(eventNames[0]));
+        var event;
+        if (typeof (Event) === 'function') {
+            event = new Event(eventNames[0]);
+        }
+        else {
+            event = document.createEvent('Event');
+            event.initEvent(eventNames[0], true, true);
+        }
+        document.dispatchEvent(event);
     }
 });
 
